@@ -2,13 +2,13 @@
 var database = require('./database.js');
 var instructions = require('./instructions.js');
 
-exports.listServices = function(req, res) {
+exports.listServices = function(req, res, next) {
 	res.json({'point':'specify a point in a unit square and this will calculate a folding sequence to find the point. \'point?x=0.5&y=0.25\''});
 };
-exports.postPoint = function(req, res){
+exports.postPoint = function(req, res, next){
 	res.json({"message":"post doesn't do anything"});
 };
-exports.solvePoint = function(req, res){
+exports.solvePoint = function(req, res, next){
 	var point = pointFromQuery(req.query);
 	var count = countFromQuery(req.query);
 	if(point == undefined){
