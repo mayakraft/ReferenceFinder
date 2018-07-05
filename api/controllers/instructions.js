@@ -1,22 +1,45 @@
 'use strict';
 
-exports.makeInstructions = function(data){
-	data.sequence;
-	data.marks;
-	data.lines;
+exports.makeInstructions = function(data, language){
+	if(language == undefined){ language = 'en'; }
 	nameComponents(data.sequence);
 	var result = {};
-	result['sequence'] = cleanSequence(data.sequence);
-	result['distance'] = data.distance;
+	result['components'] = getComponents(data.sequence);
+	result['distance'] = cleanNumber(data.distance, 12);
+	result['target'] = data.target;
 	result['solution'] = data.solution;
+	result['sequence'] = cleanSequence(data.sequence, data.marks, data.lines);
 	result['instructions'] = makeWrittenInstructions(data.sequence, data.marks, data.lines);
 	return result;
 }
 
-var cleanSequence = function(sequence){
-	return sequence.map(function(el){
-		if(el.type == 'line'){ return {"name":el.name,"d":el.d,"u":el.u}; }
-		if(el.type == 'mark'){ return {"name":el.name,"x":el.x,"y":el.y}; }
+function cleanNumber(num, decimalPlaces){
+	if(Math.floor(num) == num || decimalPlaces == undefined){ return num; }
+	return parseFloat(num.toFixed(decimalPlaces));
+}
+
+var cleanSequence = function(data, marks, lines){
+	return data.filter(function(el){ return el.instruction == true; })
+		.map(function(el){
+			if(el.type == 'line'){
+				var lineIndices = el.lines.map(function(lineKey){return data.findIndex(obj => obj.key == lineKey && obj.type=='line');})
+				var markIndices = el.marks.map(function(markKey){return data.findIndex(obj => obj.key == markKey && obj.type=='mark');})
+				var components = {};
+				if(markIndices.length){ components['points'] = markIndices; }
+				if(lineIndices.length){ components['lines'] = lineIndices; }
+				return {'make':'line','name':el.name,'axiom':el.axiom,'components':components};
+			}
+			if(el.type == 'mark'){
+				var lineIndices = el.lines.map(function(lineKey){return data.findIndex(obj => obj.key == lineKey && obj.type=='line');})
+				return {'make':'point','name':el.name,'components':lineIndices};
+			}
+		},this);
+}
+
+var getComponents = function(data){
+	return data.map(function(el){
+		if(el.type == 'line'){ return {'type':'line','name':el.name,'d':el.d,'u':el.u}; }
+		if(el.type == 'mark'){ return {'type':'point','name':el.name,'x':el.x,'y':el.y}; }
 	});
 }
 
@@ -58,7 +81,7 @@ function writeInstructionLine(line, marks, lines){
 		case 1: return "make crease "+line.name+" by folding through "+markParams[0].name+" and "+markParams[1].name;
 		case 2: return "make crease "+line.name+" by bringing "+markParams[0].name+" to "+markParams[1].name;
 		case 3: return "make crease "+line.name+" by bringing "+lineParams[0].name+" to "+lineParams[1].name;
-		case 4: return "make crease "+line.name+" by folding through "+markParams[0].name+" parallel to "+lineParams[1].name;
+		case 4: return "make crease "+line.name+" by folding through "+markParams[0].name+" parallel to "+lineParams[0].name;
 		case 5: return "make crease "+line.name+" by bringing "+markParams[0].name+" onto "+lineParams[0].name+" passing through "+markParams[1].name;
 		case 6: return "make crease "+line.name+" by bringing "+markParams[0].name+" onto "+lineParams[0].name+" and "+markParams[1].name+" onto "+lineParams[1].name;
 		case 7: return "make crease "+line.name+" by bringing "+markParams[0].name+" onto "+lineParams[0].name+" creasing perpendicular to "+lineParams[1].name;

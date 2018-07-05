@@ -10,11 +10,15 @@ exports.postPoint = function(req, res){
 };
 exports.solvePoint = function(req, res){
 	var point = pointFromQuery(req.query);
+	var count = countFromQuery(req.query);
 	if(point == undefined){
 		res.json({'error':'please specify a point in a url query. \'point?x=0.5&y=0.25\''});
 		return;
 	}
-	database.solutionsForPoint(point, 2, function(data){
+	if(count == undefined){ count = 5; }
+	database.solutionsForPoint(point, count, function(data){
+		// console.log("solutionsForPoint");
+		// console.log(data);
 		var result = data.map(function(d){ return instructions.makeInstructions(d); },this);
 		res.json(result);
 	});
@@ -29,3 +33,9 @@ function pointFromQuery(query){
 	return {'x':x,'y':y};
 }
 
+function countFromQuery(query){
+	if(query == undefined){ return; }
+	var query = parseInt(query.count);
+	if(isNaN(query)){ return; }
+	return query;
+}

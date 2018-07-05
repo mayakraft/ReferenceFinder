@@ -15,6 +15,7 @@ exports.solutionsForPoint = function(point, count, callback){
 				callCount--;
 				var entry = {
 					'solution':{'x':p.x,'y':p.y},
+					'target':point,
 					'distance':p.distance,
 					'sequence':flattenRanks(ranks),
 					'marks':marks,
@@ -24,6 +25,7 @@ exports.solutionsForPoint = function(point, count, callback){
 				masterList.push(entry);
 				if(callCount == 0){
 					db.close();
+					masterList.sort(function(a,b){ return a.distance-b.distance; });;
 					callback(masterList);
 				}
 			});
@@ -43,7 +45,7 @@ var getNearestPoints = function(point, count, callback){
 	if(count == undefined){ count = 10; }
 	// using SQL, extract all points matching within a rect bounding box range
 	// then do a proper distance calculation, return top 10 matches
-	var EPSILON = 0.01;
+	var EPSILON = 0.02;
 	// todo, at the boundaries shift so the rectangle is fully contained in the unit square
 	var xLow =  point.x - EPSILON;
 	var xHigh = point.x + EPSILON;
