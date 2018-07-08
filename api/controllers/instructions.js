@@ -22,16 +22,18 @@ var cleanSequence = function(data, marks, lines){
 	return data.filter(function(el){ return el.instruction == true; })
 		.map(function(el){
 			if(el.type == 'line'){
+				var index = data.findIndex(obj => obj.key == el.key && obj.type=='line');
 				var lineIndices = el.lines.map(function(lineKey){return data.findIndex(obj => obj.key == lineKey && obj.type=='line');})
 				var markIndices = el.marks.map(function(markKey){return data.findIndex(obj => obj.key == markKey && obj.type=='mark');})
-				var components = {};
-				if(markIndices.length){ components['points'] = markIndices; }
-				if(lineIndices.length){ components['lines'] = lineIndices; }
-				return {'make':'line','name':el.name,'axiom':el.axiom,'components':components};
+				var parameters = {};
+				if(markIndices.length){ parameters['points'] = markIndices; }
+				if(lineIndices.length){ parameters['lines'] = lineIndices; }
+				return {'type':el.type,'make':index,'name':el.name,'axiom':el.axiom,'parameters':parameters};
 			}
 			if(el.type == 'mark'){
+				var index = data.findIndex(obj => obj.key == el.key && obj.type=='mark');
 				var lineIndices = el.lines.map(function(lineKey){return data.findIndex(obj => obj.key == lineKey && obj.type=='line');})
-				return {'make':'point','name':el.name,'components':lineIndices};
+				return {'type':el.type,'make':index,'name':el.name,'parameters':{'lines':lineIndices}};
 			}
 		},this);
 }
