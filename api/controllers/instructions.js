@@ -28,12 +28,12 @@ var cleanSequence = function(data, marks, lines){
 				var parameters = {};
 				if(markIndices.length){ parameters['points'] = markIndices; }
 				if(lineIndices.length){ parameters['lines'] = lineIndices; }
-				return {'type':el.type,'make':index,'name':el.name,'axiom':el.axiom,'parameters':parameters};
+				return {'type':'line','make':index,'name':el.name,'axiom':el.axiom,'parameters':parameters};
 			}
 			if(el.type == 'mark'){
 				var index = data.findIndex(obj => obj.key == el.key && obj.type=='mark');
 				var lineIndices = el.lines.map(function(lineKey){return data.findIndex(obj => obj.key == lineKey && obj.type=='line');})
-				return {'type':el.type,'make':index,'name':el.name,'parameters':{'lines':lineIndices}};
+				return {'type':'point','make':index,'name':el.name,'parameters':{'lines':lineIndices}};
 			}
 		},this);
 }
