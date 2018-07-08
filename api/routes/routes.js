@@ -12,7 +12,7 @@ module.exports = function(app) {
 
 	app.route('/point')
 		.get(refFinder.solvePoint)
-		.post(refFinder.postPoint);
+		.post(refFinder.post);
 
 	// app.listen(80, function () {
 	// 	console.log('CORS-enabled web server listening on port 80')

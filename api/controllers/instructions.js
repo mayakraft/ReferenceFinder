@@ -64,7 +64,10 @@ var makeWrittenInstructions = function(data, marks, lines){
 	var instructionData = data.filter(function(el){ return el.instruction == true; });
 	return instructionData
 		.map(function(el, i){
-			if(i == instructionData.length-1){ return writeFinalInstructionMark(el, marks, lines); }
+			if(i == instructionData.length-1){ 
+				if(el.type=='mark'){ return writeFinalInstructionMark(el, marks, lines); }
+				if(el.type=='line'){ return writeFinalInstructionLine(el, marks, lines); }
+			}
 			if(el.type == 'line'){ return writeInstructionLine(el, marks, lines); }
 			if(el.type == 'mark'){ return writeInstructionMark(el, marks, lines); }
 		},this);
@@ -97,4 +100,20 @@ function writeFinalInstructionMark(mark, marks, lines){
 	var lineParams = mark.lines.map(function(lineKey){return lineForKey(lineKey, lines);});
 	return "the solution is at the intersection of "+lineParams[0].name+" and "+lineParams[1].name;
 }
+
+function writeFinalInstructionLine(line, marks, lines){
+	if(line.axiom == ""){ return ""; }
+	var lineParams = line.lines.map(function(lineKey){return lineForKey(lineKey, lines);});
+	var markParams = line.marks.map(function(markKey){return markForKey(markKey, marks);});
+	switch(line.axiom){
+		case 1: return "the solution is made by folding through "+markParams[0].name+" and "+markParams[1].name;
+		case 2: return "the solution is made by bringing "+markParams[0].name+" to "+markParams[1].name;
+		case 3: return "the solution is made by bringing "+lineParams[0].name+" to "+lineParams[1].name;
+		case 4: return "the solution is made by folding through "+markParams[0].name+" parallel to "+lineParams[0].name;
+		case 5: return "the solution is made by bringing "+markParams[0].name+" onto "+lineParams[0].name+" passing through "+markParams[1].name;
+		case 6: return "the solution is made by bringing "+markParams[0].name+" onto "+lineParams[0].name+" and "+markParams[1].name+" onto "+lineParams[1].name;
+		case 7: return "the solution is made by bringing "+markParams[0].name+" onto "+lineParams[0].name+" creasing perpendicular to "+lineParams[1].name;
+	}
+}
+
 

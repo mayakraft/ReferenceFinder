@@ -1,7 +1,6 @@
 'use strict';
 
 var sqlite3 = require('sqlite3').verbose();
-
 var db;
 
 exports.solutionsForPoint = function(point, count, callback){
@@ -32,6 +31,36 @@ exports.solutionsForPoint = function(point, count, callback){
 		},this);
 	});
 }
+exports.solutionsForLine = function(line, count, callback){
+	db = new sqlite3.Database('references.db');
+	getNearestLines(line, count, function(lines, error){
+		console.log("solutionsForLine");
+		console.log(lines);
+		var masterList = [];
+		var callCount = 0;
+		lines.forEach(function(l){
+			callCount++;
+			tracePath(l, function(ranks, marks, lines){
+				callCount--;
+				var entry = {
+					'solution':{'d':l.d, 'u':{'x':l.u.x, 'y':l.u.y}},
+					'target':line,
+					'distance':l.distance,
+					'sequence':flattenRanks(ranks),
+					'marks':marks,
+					'lines':lines
+				}
+				delete l.distance;
+				masterList.push(entry);
+				if(callCount == 0){
+					db.close();
+					masterList.sort(function(a,b){ return a.distance-b.distance; });;
+					callback(masterList);
+				}
+			});
+		},this);
+	});
+}
 
 var flattenRanks = function(ranks){
 	return ranks
@@ -42,9 +71,9 @@ var flattenRanks = function(ranks){
 // point should be an object {x:__, y:__}
 // callback is function(points, error), points is an array
 var getNearestPoints = function(point, count, callback){
-	if(count == undefined){ count = 10; }
+	if(count == undefined){ count = 5; }
 	// using SQL, extract all points matching within a rect bounding box range
-	// then do a proper distance calculation, return top 10 matches
+	// then do a proper distance calculation, return top 5 matches
 	var EPSILON = 0.02;
 	// todo, at the boundaries shift so the rectangle is fully contained in the unit square
 	var xLow =  point.x - EPSILON;
@@ -59,6 +88,52 @@ var getNearestPoints = function(point, count, callback){
 			if(error){ console.log("error"); callback(undefined, error) }
 			if(callback){ 
 				callback( sortPointsByDistance(point, points).slice(0,count) );
+			}
+		});
+	});
+}
+
+// line should be an object {d:___, u:{x:__, y:__}}
+// callback is function(lines, error), points is an array
+var getNearestLines = function(line, count, callback){
+	if(count == undefined){ count = 5; }
+	// using SQL, extract all points matching within a rect bounding box range
+	// then do a proper distance calculation, return top 5 matches
+	var EPSILON = 0.02;
+	// todo, at the boundaries shift so the rectangle is fully contained in the unit square
+	var xLow =  line.u.x - EPSILON;
+	var xHigh = line.u.x + EPSILON;
+	var yLow =  line.u.y - EPSILON;
+	var yHigh = line.u.y + EPSILON;
+	var dLow =  line.d - EPSILON;
+	var dHigh = line.d + EPSILON;
+
+	console.log(xLow, xHigh, yLow, yHigh, dLow, dHigh);
+
+
+
+
+
+
+
+	db.serialize(function(){
+		var lines = [];
+		db.each("SELECT Key, Name, Axiom, Rank, D, UX, UY, Mark1, Mark2, Line1, Line2 FROM Lines WHERE UX BETWEEN " + xLow + " AND " + xHigh + " AND UY BETWEEN " + yLow + " AND " + yHigh + " AND D BETWEEN " + dLow + " AND " + dHigh, function(err, row){
+			lines.push({
+				'type':'line',
+				'key':row.Key, 
+				'name':row.Name, 
+				'axiom':row.Axiom, 
+				'rank':row.Rank, 
+				'd':row.D, 
+				'u':{'x':row.UX, 'y':row.UY}, 
+				'marks':[row.Mark1, row.Mark2].map(function(el){return parseInt(el)}).filter(function(el){return !isNaN(el)}), 
+				'lines':[row.Line1, row.Line2].map(function(el){return parseInt(el)}).filter(function(el){return !isNaN(el)})
+			});
+		}, function(error, rowCount){
+			if(error){ console.log("error"); callback(undefined, error) }
+			if(callback){ 
+				callback( sortLinesByDistance(line, lines).slice(0,count) );
 			}
 		});
 	});
@@ -85,6 +160,13 @@ var sortPointsByDistance = function(point, points){
 	points.forEach(function(data){ data['distance'] = dist(point, {x:data.x, y:data.y}) });
 	return points.sort(function(a,b){ return a.distance-b.distance; });
 }
+
+var sortLinesByDistance = function(line, lines){
+	var dist = function(a, b, c){ return Math.sqrt(Math.pow(a,2)+Math.pow(b,2)+Math.pow(c,2)); }
+	lines.forEach(function(l){ l['distance'] = dist(l.u.x-line.u.x, l.u.y-line.u.y, l.d-line.d); });
+	return lines.sort(function(a,b){ return a.distance-b.distance; });
+}
+
 
 var travelPath = function(data, ranks, visitedMarks, visitedLines, callCount, callback){
 	// data is the point or line to be found
