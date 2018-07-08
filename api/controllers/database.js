@@ -34,8 +34,6 @@ exports.solutionsForPoint = function(point, count, callback){
 exports.solutionsForLine = function(line, count, callback){
 	db = new sqlite3.Database('references.db');
 	getNearestLines(line, count, function(lines, error){
-		console.log("solutionsForLine");
-		console.log(lines);
 		var masterList = [];
 		var callCount = 0;
 		lines.forEach(function(l){
@@ -85,7 +83,7 @@ var getNearestPoints = function(point, count, callback){
 		db.each("SELECT Key, Name, Rank, X, Y, Line1, Line2 FROM Marks WHERE X BETWEEN " + xLow + " AND " + xHigh + " AND Y BETWEEN " + yLow + " AND " + yHigh, function(err, row){
 			points.push({'type':'mark', 'key':row.Key, 'name':row.Name, 'rank':row.Rank, 'x':row.X, 'y':row.Y, 'lines':[row.Line1, row.Line2].map(function(el){return parseInt(el)}).filter(function(el){return !isNaN(el)})});
 		}, function(error, rowCount){
-			if(error){ console.log("error"); callback(undefined, error) }
+			if(error){ callback(undefined, error) }
 			if(callback){ 
 				callback( sortPointsByDistance(point, points).slice(0,count) );
 			}
@@ -107,15 +105,6 @@ var getNearestLines = function(line, count, callback){
 	var yHigh = line.u.y + EPSILON;
 	var dLow =  line.d - EPSILON;
 	var dHigh = line.d + EPSILON;
-
-	console.log(xLow, xHigh, yLow, yHigh, dLow, dHigh);
-
-
-
-
-
-
-
 	db.serialize(function(){
 		var lines = [];
 		db.each("SELECT Key, Name, Axiom, Rank, D, UX, UY, Mark1, Mark2, Line1, Line2 FROM Lines WHERE UX BETWEEN " + xLow + " AND " + xHigh + " AND UY BETWEEN " + yLow + " AND " + yHigh + " AND D BETWEEN " + dLow + " AND " + dHigh, function(err, row){
@@ -131,7 +120,7 @@ var getNearestLines = function(line, count, callback){
 				'lines':[row.Line1, row.Line2].map(function(el){return parseInt(el)}).filter(function(el){return !isNaN(el)})
 			});
 		}, function(error, rowCount){
-			if(error){ console.log("error"); callback(undefined, error) }
+			if(error){ callback(undefined, error) }
 			if(callback){ 
 				callback( sortLinesByDistance(line, lines).slice(0,count) );
 			}

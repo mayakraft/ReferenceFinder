@@ -14,6 +14,10 @@ module.exports = function(app) {
 		.get(refFinder.solvePoint)
 		.post(refFinder.post);
 
+	app.route('/line')
+		.get(refFinder.solveLine)
+		.post(refFinder.post);
+
 	// app.listen(80, function () {
 	// 	console.log('CORS-enabled web server listening on port 80')
 	// })
