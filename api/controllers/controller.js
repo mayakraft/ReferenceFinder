@@ -58,6 +58,11 @@ var convertLine = function(x1, y1, x2, y2){
 	var ux = (dYin / mag);
 	var uy = -(dXin / mag);
 	var d = x1 * ux + y1 * uy;
+	if(d < 0){
+		ux = -(dYin / mag);
+		uy = (dXin / mag);
+		d = x1 * ux + y1 * uy;
+	}
 	return {'d':d, 'u':{'x':ux, 'y':uy}};
 }
 

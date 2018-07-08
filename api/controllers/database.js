@@ -34,6 +34,7 @@ exports.solutionsForPoint = function(point, count, callback){
 exports.solutionsForLine = function(line, count, callback){
 	db = new sqlite3.Database('references.db');
 	getNearestLines(line, count, function(lines, error){
+		if(lines.length == 0){ callback([]); }
 		var masterList = [];
 		var callCount = 0;
 		lines.forEach(function(l){
@@ -103,27 +104,33 @@ var getNearestLines = function(line, count, callback){
 	var xHigh = line.u.x + EPSILON;
 	var yLow =  line.u.y - EPSILON;
 	var yHigh = line.u.y + EPSILON;
+	var xInvLow =  -line.u.x - EPSILON;
+	var xInvHigh = -line.u.x + EPSILON;
+	var yInvLow =  -line.u.y - EPSILON;
+	var yInvHigh = -line.u.y + EPSILON;
 	var dLow =  line.d - EPSILON;
 	var dHigh = line.d + EPSILON;
 	db.serialize(function(){
 		var lines = [];
 		db.each("SELECT Key, Name, Axiom, Rank, D, UX, UY, Mark1, Mark2, Line1, Line2 FROM Lines WHERE UX BETWEEN " + xLow + " AND " + xHigh + " AND UY BETWEEN " + yLow + " AND " + yHigh + " AND D BETWEEN " + dLow + " AND " + dHigh, function(err, row){
-			lines.push({
-				'type':'line',
-				'key':row.Key, 
-				'name':row.Name, 
-				'axiom':row.Axiom, 
-				'rank':row.Rank, 
-				'd':row.D, 
-				'u':{'x':row.UX, 'y':row.UY}, 
-				'marks':[row.Mark1, row.Mark2].map(function(el){return parseInt(el)}).filter(function(el){return !isNaN(el)}), 
-				'lines':[row.Line1, row.Line2].map(function(el){return parseInt(el)}).filter(function(el){return !isNaN(el)})
-			});
+			var lineMarks = [row.Mark1, row.Mark2].map(function(el){return parseInt(el)}).filter(function(el){return !isNaN(el)});
+			var lineLines = [row.Line1, row.Line2].map(function(el){return parseInt(el)}).filter(function(el){return !isNaN(el)});
+			lines.push({'type':'line','key':row.Key, 'name':row.Name, 'axiom':row.Axiom, 'rank':row.Rank, 'd':row.D, 'u':{'x':row.UX, 'y':row.UY}, 'marks':lineMarks, 'lines':lineLines});
 		}, function(error, rowCount){
 			if(error){ callback(undefined, error) }
-			if(callback){ 
-				callback( sortLinesByDistance(line, lines).slice(0,count) );
-			}
+			db.each("SELECT Key, Name, Axiom, Rank, D, UX, UY, Mark1, Mark2, Line1, Line2 FROM Lines WHERE UX BETWEEN " + xInvLow + " AND " + xInvHigh + " AND UY BETWEEN " + yInvLow + " AND " + yInvHigh + " AND D BETWEEN " + dLow + " AND " + dHigh, function(err, row){
+				var lineMarks = [row.Mark1, row.Mark2].map(function(el){return parseInt(el)}).filter(function(el){return !isNaN(el)});
+				var lineLines = [row.Line1, row.Line2].map(function(el){return parseInt(el)}).filter(function(el){return !isNaN(el)});
+				lines.push({'type':'line','key':row.Key, 'name':row.Name, 'axiom':row.Axiom, 'rank':row.Rank, 'd':row.D, 'u':{'x':row.UX, 'y':row.UY}, 'marks':lineMarks, 'lines':lineLines});
+			}, function(error, rowCount){
+				if(error){ callback(undefined, error) }
+				if(callback){ 
+					callback( sortLinesByDistance(line, lines).slice(0,count) );
+				}
+			});
+			// if(callback){ 
+			// 	callback( sortLinesByDistance(line, lines).slice(0,count) );
+			// }
 		});
 	});
 }
@@ -152,7 +159,11 @@ var sortPointsByDistance = function(point, points){
 
 var sortLinesByDistance = function(line, lines){
 	var dist = function(a, b, c){ return Math.sqrt(Math.pow(a,2)+Math.pow(b,2)+Math.pow(c,2)); }
-	lines.forEach(function(l){ l['distance'] = dist(l.u.x-line.u.x, l.u.y-line.u.y, l.d-line.d); });
+	lines.forEach(function(l){ 
+		var ld1 = dist(l.u.x-line.u.x, l.u.y-line.u.y, l.d-line.d);
+		var ld2 = dist((-l.u.x)-line.u.x, (-l.u.y)-line.u.y, l.d-line.d);
+		l['distance'] = (ld1 < ld2) ? ld1 : ld2;
+	});
 	return lines.sort(function(a,b){ return a.distance-b.distance; });
 }
 
