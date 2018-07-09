@@ -3,7 +3,7 @@ var database = require('./database.js');
 var instructions = require('./instructions.js');
 
 exports.listServices = function(req, res, next) {
-	res.json({'instructions':'specify a point in a unit square for a folding sequence to locate the point. \'point?x=0.5&y=0.25\''});
+	res.json({'instructions':'specify a the coordinates of a point or a line (two collinear points). example: \'https://reference-finder.herokuapp.com/point?x=0.5&y=0.25\', or \'https://reference-finder.herokuapp.com/line?x1=0.5&y1=0.25&x2=0.75&y2=0.0\''});
 };
 exports.post = function(req, res, next){
 	res.json({"message":"post doesn't do anything"});
@@ -40,11 +40,6 @@ exports.solveLine = function(req, res, next){
 		});
 	}
 };
-
-	// magnitude():number { return Math.sqrt(this.x * this.x + this.y * this.y); }
-	// normalize():XY { var m = this.magnitude(); return new XY(this.x/m, this.y/m);}
-	// rotate90():XY { return new XY(-this.y, this.x); }
-	// dot(point:XY):number { return this.x * point.x + this.y * point.y; }
 
 var convertLine = function(x1, y1, x2, y2){
 	// u = (p2 - p1).Normalize().Rotate90();

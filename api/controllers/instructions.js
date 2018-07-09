@@ -5,7 +5,7 @@ exports.makeInstructions = function(data, language){
 	nameComponents(data.sequence);
 	var result = {};
 	result['components'] = getComponents(data.sequence);
-	result['distance'] = cleanNumber(data.distance, 12);
+	result['error'] = cleanNumber(data.distance, 12);
 	result['target'] = data.target;
 	result['solution'] = data.solution;
 	result['sequence'] = cleanSequence(data.sequence, data.marks, data.lines);
