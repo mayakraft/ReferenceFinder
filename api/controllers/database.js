@@ -6,11 +6,15 @@ var db;
 exports.solutionsForPoint = function(point, count, callback){
 	db = new sqlite3.Database('references.db');
 	getNearestPoints(point, count, function(points, error){
-		console.log("getNearestPoints found points ", points.length);
+		if(points.length == 0){ callback([]); }
 		var masterList = [];
 		var callCount = 0;
 		points.forEach(function(p){
-			callCount++;
+			if(p.rank != 0){ callCount++; }
+			else if(points.length == 1){ 
+				// special case, only asking for 1 solution, and that solution is a trivial case (paper edge)
+				callback([{'solution':{'x':p.x,'y':p.y}, 'target':point, 'distance':p.distance, 'sequence':[], 'marks':[], 'lines':[]}]);
+			}
 			tracePath(p, function(ranks, marks, lines){
 				callCount--;
 				var entry = {
@@ -39,7 +43,10 @@ exports.solutionsForLine = function(line, count, callback){
 		var masterList = [];
 		var callCount = 0;
 		lines.forEach(function(l){
-			callCount++;
+			if(l.rank != 0){ callCount++; }
+			else if(lines.length == 1){
+				callback([{'solution':{'d':l.d, 'u':{'x':l.u.x, 'y':l.u.y}}, 'target':line, 'distance':l.distance, 'sequence':[], 'marks':[], 'lines':[]}]);
+			}
 			tracePath(l, function(ranks, marks, lines){
 				callCount--;
 				var entry = {
@@ -101,6 +108,9 @@ var getNearestLines = function(line, count, callback){
 	// then do a proper distance calculation, return top 5 matches
 	var EPSILON = 0.02;
 	// todo, at the boundaries shift so the rectangle is fully contained in the unit square
+	if(Math.abs(Math.atan2(line.u.y, line.u.x)) < 0.09){ EPSILON = 0.04; }
+	if(Math.abs(Math.atan2(line.u.y, line.u.x)) < 0.05){ EPSILON = 0.06; }
+	if(Math.abs(Math.atan2(line.u.y, line.u.x)) < 0.01){ EPSILON = 0.08; }
 	var xLow =  line.u.x - EPSILON;
 	var xHigh = line.u.x + EPSILON;
 	var yLow =  line.u.y - EPSILON;
@@ -125,7 +135,7 @@ var getNearestLines = function(line, count, callback){
 				lines.push({'type':'line','key':row.Key, 'name':row.Name, 'axiom':row.Axiom, 'rank':row.Rank, 'd':row.D, 'u':{'x':row.UX, 'y':row.UY}, 'marks':lineMarks, 'lines':lineLines});
 			}, function(error, rowCount){
 				if(error){ callback(undefined, error) }
-				if(callback){ 
+				if(callback){
 					callback( sortLinesByDistance(line, lines).slice(0,count) );
 				}
 			});
@@ -138,9 +148,6 @@ var getNearestLines = function(line, count, callback){
 
 // callback is function(ranks, marks, lines)
 var tracePath = function(data, callback){
-	console.log("BEGINNING TRACE PATH");
-	console.log("     -point", data.x, data.y);
-	console.log("     -line", data.d, data.u);
 	var ranks = Array.apply(null, Array(7)).map(function(el){return {'lines':[],'marks':[]};});
 	// mark this point as the target goal
 	data['solution'] = true;
@@ -152,22 +159,16 @@ var tracePath = function(data, callback){
 		case 'line': visitedLines.push(data); ranks[ data.rank ].lines.push(data); break;
 	}
 	// if our answer is already found ("0,0 is the top left corner point")
-	console.log("data type", data.type);
-	if(data.type == 'line' && data.lines.length == 0 && data.marks.length == 0){
-		console.log("not entering travel path, line already found");
-		callback(ranks, visitedMarks, visitedLines);
-		return;
-	}
-	if(data.type == 'mark' && data.lines.length == 0){
-		console.log("not entering travel path, point already found");
-		callback(ranks, visitedMarks, visitedLines);
-		return;
-	}
+	// if(data.rank == 0){ callback(ranks, visitedMarks, visitedLines); }
 	// begin recursion
-	travelPath(data, ranks, visitedMarks, visitedLines, {marks:0, lines:0}, function(){
-		console.log("travel path finished");
-		callback(ranks, visitedMarks, visitedLines);
-	});
+	if(data.rank != 0){
+		travelPath(data, ranks, visitedMarks, visitedLines, {marks:0, lines:0}, function(){
+			callback(ranks, visitedMarks, visitedLines);
+		});
+	} 
+	// else{
+	// 	callback(ranks, visitedMarks, visitedLines);
+	// }
 }
 
 
@@ -189,7 +190,6 @@ var sortLinesByDistance = function(line, lines){
 
 
 var travelPath = function(data, ranks, visitedMarks, visitedLines, callCount, callback){
-	console.log("travel path");
 	// data is the point or line to be found
 	// ranks is the return object, passed in argument because of recursion
 	// visitedMarks and visitedLines is the memoization, and collected for purposes beyond this function too
@@ -198,6 +198,7 @@ var travelPath = function(data, ranks, visitedMarks, visitedLines, callCount, ca
 			callCount.lines++;
 			db.each("SELECT Key, Name, Axiom, Rank, D, UX, UY, Mark1, Mark2, Line1, Line2 FROM Lines WHERE Key == " + lineKey, function(err, row){
 				callCount.lines--;
+
 				var nextLine = {
 					'type':'line',
 					'key':row.Key, 

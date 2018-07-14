@@ -17,9 +17,7 @@ exports.solvePoint = function(req, res, next){
 	}
 	if(count == undefined){ count = 5; }
 	if(point != undefined){
-		console.log("searching for point ", point.x, point.y);
 		database.solutionsForPoint(point, count, function(data){
-			// console.log(data);
 			var result = data.map(function(d){ return instructions.makeInstructions(d); },this);
 			res.json(result);
 		});
@@ -34,9 +32,7 @@ exports.solveLine = function(req, res, next){
 	}
 	if(count == undefined){ count = 5; }
 	if (line != undefined){
-		console.log("solutions for line ", line.d, line.u);
 		database.solutionsForLine(line, count, function(data){
-			// console.log(data);
 			var result = data.map(function(d){ return instructions.makeInstructions(d); },this);
 			res.json(result);
 		});
