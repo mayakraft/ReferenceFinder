@@ -3,7 +3,7 @@ var database = require('./database.js');
 var instructions = require('./instructions.js');
 
 exports.listServices = function(req, res, next) {
-	res.json({'instructions':'specify a the coordinates of a point or a line (two collinear points). example: \'https://reference-finder.herokuapp.com/point?x=0.5&y=0.25\', or \'https://reference-finder.herokuapp.com/line?x1=0.5&y1=0.25&x2=0.75&y2=0.0\''});
+	res.json({'instructions':'specify the location of a point or a line (two collinear points)', 'example-1':'https://reference-finder.herokuapp.com/point?x=0.5&y=0.25', 'example-2':'https://reference-finder.herokuapp.com/line?x1=0.5&y1=0.25&x2=0.75&y2=0.0'});
 };
 exports.post = function(req, res, next){
 	res.json({"message":"post doesn't do anything"});
@@ -12,7 +12,7 @@ exports.solvePoint = function(req, res, next){
 	var count = countFromQuery(req.query);
 	var point = pointFromQuery(req.query);
 	if(point == undefined){
-		res.json({'error':'please specify a point in a url query. \'point?x=0.5&y=0.25\''});
+		res.json({'error':'please check your point parameters. example \'point?x=0.5&y=0.25\''});
 		return;
 	}
 	if(count == undefined){ count = 5; }
@@ -27,7 +27,7 @@ exports.solveLine = function(req, res, next){
 	var count = countFromQuery(req.query);
 	var line = lineFromQuery(req.query);
 	if(line == undefined){
-		res.json({'error':'please specify a line in a url query. \'line?x1=0.5&y1=0.25&x2=0.0&y2=1.0\''});
+		res.json({'error':'please check your line parameters. example \'line?x1=0.5&y1=0.25&x2=0.0&y2=1.0\''});
 		return;
 	}
 	if(count == undefined){ count = 5; }
@@ -82,5 +82,7 @@ function countFromQuery(query){
 	if(query == undefined){ return; }
 	var query = parseInt(query.count);
 	if(isNaN(query)){ return; }
+	if(query <= 0){ query = 1; }
+	if(query > 36){ query = 36; }
 	return query;
 }
