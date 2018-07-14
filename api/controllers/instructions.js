@@ -14,6 +14,7 @@ exports.makeInstructions = function(data, language){
 }
 
 function cleanNumber(num, decimalPlaces){
+	if(num == undefined){ return undefined; }
 	if(Math.floor(num) == num || decimalPlaces == undefined){ return num; }
 	return parseFloat(num.toFixed(decimalPlaces));
 }

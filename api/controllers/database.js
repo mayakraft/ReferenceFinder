@@ -6,6 +6,7 @@ var db;
 exports.solutionsForPoint = function(point, count, callback){
 	db = new sqlite3.Database('references.db');
 	getNearestPoints(point, count, function(points, error){
+		console.log("getNearestPoints found points ", points.length);
 		var masterList = [];
 		var callCount = 0;
 		points.forEach(function(p){
@@ -136,16 +137,35 @@ var getNearestLines = function(line, count, callback){
 }
 
 // callback is function(ranks, marks, lines)
-var tracePath = function(point, callback){
+var tracePath = function(data, callback){
+	console.log("BEGINNING TRACE PATH");
+	console.log("     -point", data.x, data.y);
+	console.log("     -line", data.d, data.u);
 	var ranks = Array.apply(null, Array(7)).map(function(el){return {'lines':[],'marks':[]};});
 	// mark this point as the target goal
-	point['solution'] = true;
-	// add first point
+	data['solution'] = true;
 	var visitedLines = [];
-	var visitedMarks = [point];
-	ranks[ point.rank ].marks.push(point);
+	var visitedMarks = [];
+	// add this data object as first item in array
+	switch(data.type){
+		case 'mark': visitedMarks.push(data); ranks[ data.rank ].marks.push(data); break;
+		case 'line': visitedLines.push(data); ranks[ data.rank ].lines.push(data); break;
+	}
+	// if our answer is already found ("0,0 is the top left corner point")
+	console.log("data type", data.type);
+	if(data.type == 'line' && data.lines.length == 0 && data.marks.length == 0){
+		console.log("not entering travel path, line already found");
+		callback(ranks, visitedMarks, visitedLines);
+		return;
+	}
+	if(data.type == 'mark' && data.lines.length == 0){
+		console.log("not entering travel path, point already found");
+		callback(ranks, visitedMarks, visitedLines);
+		return;
+	}
 	// begin recursion
-	travelPath(point, ranks, visitedMarks, visitedLines, {marks:0, lines:0}, function(){
+	travelPath(data, ranks, visitedMarks, visitedLines, {marks:0, lines:0}, function(){
+		console.log("travel path finished");
 		callback(ranks, visitedMarks, visitedLines);
 	});
 }
@@ -169,6 +189,7 @@ var sortLinesByDistance = function(line, lines){
 
 
 var travelPath = function(data, ranks, visitedMarks, visitedLines, callCount, callback){
+	console.log("travel path");
 	// data is the point or line to be found
 	// ranks is the return object, passed in argument because of recursion
 	// visitedMarks and visitedLines is the memoization, and collected for purposes beyond this function too
