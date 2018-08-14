@@ -11,6 +11,7 @@ exports.post = function(req, res, next){
 exports.solvePoint = function(req, res, next){
 	var count = countFromQuery(req.query);
 	var point = pointFromQuery(req.query);
+	var lang = languageFromQuery(req.query);
 	if(point == undefined){
 		res.json({'error':'please check your point parameters. example \'point?x=0.5&y=0.25\''});
 		return;
@@ -18,7 +19,7 @@ exports.solvePoint = function(req, res, next){
 	if(count == undefined){ count = 5; }
 	if(point != undefined){
 		database.solutionsForPoint(point, count, function(data){
-			var result = data.map(function(d){ return instructions.makeInstructions(d); },this);
+			var result = data.map(function(d){ return instructions.makeInstructions(d, lang); },this);
 			res.json(result);
 		});
 	}
@@ -26,6 +27,7 @@ exports.solvePoint = function(req, res, next){
 exports.solveLine = function(req, res, next){
 	var count = countFromQuery(req.query);
 	var line = lineFromQuery(req.query);
+	var lang = languageFromQuery(req.query);
 	if(line == undefined){
 		res.json({'error':'please check your line parameters. example \'line?x1=0.5&y1=0.25&x2=0.0&y2=1.0\''});
 		return;
@@ -33,7 +35,7 @@ exports.solveLine = function(req, res, next){
 	if(count == undefined){ count = 5; }
 	if (line != undefined){
 		database.solutionsForLine(line, count, function(data){
-			var result = data.map(function(d){ return instructions.makeInstructions(d); },this);
+			var result = data.map(function(d){ return instructions.makeInstructions(d, lang); },this);
 			res.json(result);
 		});
 	}
@@ -85,4 +87,14 @@ function countFromQuery(query){
 	if(query <= 0){ query = 1; }
 	if(query > 36){ query = 36; }
 	return query;
+}
+function languageFromQuery(query){
+	if(query == undefined){ return; }
+	var lang;
+	if(query.lang != undefined){ lang = query.lang; }
+	if(query.language != undefined){ lang = query.language; }
+	// check if language is supported
+	var valid = (['en','es'].filter(function(el){ return el == lang; }).length > 0);
+	if(lang == undefined || !valid){ lang = "en"; }
+	return lang;
 }

@@ -1,7 +1,10 @@
 'use strict';
 
+var localize;
+
 exports.makeInstructions = function(data, language){
 	if(language == undefined){ language = 'en'; }
+	localize = require("../languages/"+language+".js");
 	nameComponents(data.sequence);
 	var result = {};
 	result['components'] = getComponents(data.sequence);
@@ -49,6 +52,10 @@ var getComponents = function(data){
 var nameComponents = function(data){
 	var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	var letterI = 0;
+	// translate alread-named components
+	data.filter(function(el){ return el.name != ""; })
+		.forEach(function(el){ el.name = localize.parts[el.name]; })
+
 	data.filter(function(el){ return el.name == ""; })
 		.forEach(function(el){
 			el.name = letters[(letterI%letters.length)];
@@ -81,42 +88,42 @@ function markForKey(key, marks){ return marks.filter(function(vm){return vm.key=
 
 function writeInstructionLine(line, marks, lines){
 	if(line.axiom == ""){ return ""; }
-	var lineParams = line.lines.map(function(lineKey){return lineForKey(lineKey, lines);});
-	var markParams = line.marks.map(function(markKey){return markForKey(markKey, marks);});
-	switch(line.axiom){
-		case 1: return "make crease "+line.name+" by folding through "+markParams[0].name+" and "+markParams[1].name;
-		case 2: return "make crease "+line.name+" by bringing "+markParams[0].name+" to "+markParams[1].name;
-		case 3: return "make crease "+line.name+" by bringing "+lineParams[0].name+" to "+lineParams[1].name;
-		case 4: return "make crease "+line.name+" by folding through "+markParams[0].name+" parallel to "+lineParams[0].name;
-		case 5: return "make crease "+line.name+" by bringing "+markParams[0].name+" onto "+lineParams[0].name+" passing through "+markParams[1].name;
-		case 6: return "make crease "+line.name+" by bringing "+markParams[0].name+" onto "+lineParams[0].name+" and "+markParams[1].name+" onto "+lineParams[1].name;
-		case 7: return "make crease "+line.name+" by bringing "+markParams[0].name+" onto "+lineParams[0].name+" creasing perpendicular to "+lineParams[1].name;
-	}
+	var instruction = localize.axiom(line.axiom);
+	instruction = instruction.replace("<X>", line.name);
+	line.marks
+		.map(function(markKey){return markForKey(markKey, marks);})
+		.forEach(function(m,i){ instruction = instruction.replace("<P"+i+">",m.name); },this);
+	line.lines
+		.map(function(lineKey){return lineForKey(lineKey, lines);})
+		.forEach(function(l,i){ instruction = instruction.replace("<L"+i+">",l.name); },this);
+	return instruction;
 }
 
 function writeInstructionMark(mark, marks, lines){
-	var lineParams = mark.lines.map(function(lineKey){return lineForKey(lineKey, lines);});
-	return "point "+mark.name+" is the intersection of "+lineParams[0].name+" and "+lineParams[1].name;
+	var instruction = localize.intersection();
+	instruction = instruction.replace("<X>", mark.name);
+	mark.lines
+		.map(function(lineKey){return lineForKey(lineKey, lines);})
+		.forEach(function(l,i){ instruction = instruction.replace("<L"+i+">",l.name); },this);
+	return instruction;
 }
 
 function writeFinalInstructionMark(mark, marks, lines){
-	var lineParams = mark.lines.map(function(lineKey){return lineForKey(lineKey, lines);});
-	return "the solution is at the intersection of "+lineParams[0].name+" and "+lineParams[1].name;
+	var instruction = localize.intersectionFinal();
+	mark.lines
+		.map(function(lineKey){return lineForKey(lineKey, lines);})
+		.forEach(function(l,i){ instruction = instruction.replace("<L"+i+">",l.name); },this);
+	return instruction;
 }
 
 function writeFinalInstructionLine(line, marks, lines){
 	if(line.axiom == ""){ return ""; }
-	var lineParams = line.lines.map(function(lineKey){return lineForKey(lineKey, lines);});
-	var markParams = line.marks.map(function(markKey){return markForKey(markKey, marks);});
-	switch(line.axiom){
-		case 1: return "the solution is made by folding through "+markParams[0].name+" and "+markParams[1].name;
-		case 2: return "the solution is made by bringing "+markParams[0].name+" to "+markParams[1].name;
-		case 3: return "the solution is made by bringing "+lineParams[0].name+" to "+lineParams[1].name;
-		case 4: return "the solution is made by folding through "+markParams[0].name+" parallel to "+lineParams[0].name;
-		case 5: return "the solution is made by bringing "+markParams[0].name+" onto "+lineParams[0].name+" passing through "+markParams[1].name;
-		case 6: return "the solution is made by bringing "+markParams[0].name+" onto "+lineParams[0].name+" and "+markParams[1].name+" onto "+lineParams[1].name;
-		case 7: return "the solution is made by bringing "+markParams[0].name+" onto "+lineParams[0].name+" creasing perpendicular to "+lineParams[1].name;
-	}
+	var instruction = localize.axiomFinal(line.axiom);
+	line.marks
+		.map(function(markKey){return markForKey(markKey, marks);})
+		.forEach(function(m,i){ instruction = instruction.replace("<P"+i+">",m.name); },this);
+	line.lines
+		.map(function(lineKey){return lineForKey(lineKey, lines);})
+		.forEach(function(l,i){ instruction = instruction.replace("<L"+i+">",l.name); },this);
+	return instruction;
 }
-
-
