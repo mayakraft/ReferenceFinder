@@ -1,0 +1,43 @@
+{
+	"axiom" : [
+		"Haga el pliegue <X> doblando entre <P0> y <P1>.",
+		"Haga el pliegue <X> llevando <P0> a <P1>.",
+		"Haga el pliegue <X> llevando <L0> a <L1>.",
+		"Haga el pliegue <X> que pasa por <P0> llevando <L0> sobre ella misma.",
+		"Haga que el pliegue <X> pase por <P1> llevando <P0> a <L0>.",
+		"Haga el pliegue <X> llevando <P0> a <L0> y <P1> a <L1>.",
+		"Haga el pliegue <X> que lleva <P0> a <L0> llevando <L1> sobre ella misma."
+	],
+	"axiom_solution" : [
+		"La solución se logra plegando entre <P0> y <P1>.",
+		"La solución se logra llevando <P0> a <P1>.",
+		"La solución se logra llevando <L0> a <L1>.",
+		"La solución se logra llevando <L0> sobre ella misma, pasando por <P0>.",
+		"La solución se logra llevando <P0> a <L0>, pasando por <P1>.",
+		"La solución se logra llevando <P0> a <L1> y <P0> a <L1>.",
+		"La solución se logra llevando <L1> sobre ella misma y llevando <P0> a <L0>."
+	],
+	"intersection" : "<X> es la intersección de <L0> y <L1>.",
+	"intersection_solution" : "La solución es la intersección de <L0> y <L1>.",
+	"paper" : {
+		"ne" : "la esquina superior derecha",
+		"se" : "la esquina inferior derecha",
+		"sw" : "la esquina inferior izquierda",
+		"nw" : "la esquina superior izquierda",
+		"n" : "el borde superior",
+		"e" : "el borde derecho",
+		"s" : "el borde inferior",
+		"w" : "el borde izquierdo",
+		"sw_ne" : "la diagonal que va hacia arriba",
+		"nw_se" : "la diagonal que va hacia abajo"
+	},
+	"phrase" : {
+		"point" : "un punto",
+		"line" : "una línea",
+		"error" : "error",
+		"solution" : "solución",
+		"find a point" : "encuentre un punto",
+		"find a line" : "encuentre una línea",
+		"reference finder" : "buscador de referencia"
+	}
+}

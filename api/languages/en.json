@@ -1,0 +1,43 @@
+{
+	"axiom" : [
+		"Make crease <X> by folding through <P0> and <P1>.",
+		"Make crease <X> by bringing <P0> to <P1>.",
+		"Make crease <X> by bringing <L0> to <L1>.",
+		"Make crease <X> by bringing <L0> onto itself, passing through <P0>.",
+		"Make crease <X> by bringing <P0> to <L0>, passing through <P1>.",
+		"Make crease <X> by bringing <P0> to <L0> and <P1> to <L1>.",
+		"Make crease <X> by bringing <L1> onto itself and bringing <P0> to <L0>."
+	],
+	"axiom_solution" : [
+		"The solution is made by folding through <P0> and <P1>.",
+		"The solution is made by bringing <P0> to <P1>.",
+		"The solution is made by bringing <L0> to <L1>.",
+		"The solution is made by bringing <L0> onto itself, passing through <P0>.",
+		"The solution is made by bringing <P0> to <L0>, passing through <P1>.",
+		"The solution is made by bringing <P0> to <L1> and <P0> to <L1>.",
+		"The solution is made by bringing <L1> onto itself and bringing <P0> to <L0>."
+	],
+	"intersection" : "Point <X> is at the intersection of <L0> and <L1>.",
+	"intersection_solution" : "The solution is at the intersection of <L0> and <L1>.",
+	"paper" : {
+		"ne" : "the top right corner",
+		"se" : "the bottom right corner",
+		"sw" : "the bottom left corner",
+		"nw" : "the top left corner",
+		"n" : "the top edge",
+		"e" : "the right edge",
+		"s" : "the bottom edge",
+		"w" : "the left edge",
+		"sw_ne" : "the upward diagonal",
+		"nw_se" : "the downward diagonal"
+	},
+	"phrase" : {
+		"point" : "point",
+		"line" : "line",
+		"error" : "error",
+		"solution" : "solution",
+		"find a point" : "find a point",
+		"find a line" : "find a line",
+		"reference finder" : "reference finder"
+	}
+}

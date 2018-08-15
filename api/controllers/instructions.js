@@ -4,7 +4,7 @@ var localize;
 
 exports.makeInstructions = function(data, language){
 	if(language == undefined){ language = 'en'; }
-	localize = require("../languages/"+language+".js");
+	localize = require("../languages/"+language+".json");
 	nameComponents(data.sequence);
 	var result = {};
 	result['components'] = getComponents(data.sequence);
@@ -49,12 +49,28 @@ var getComponents = function(data){
 	});
 }
 
+var reverseNameComponent = function(component){
+	var paper = {
+		"the top right corner":"ne",
+		"the bottom right corner":"se",
+		"the bottom left corner":"sw",
+		"the top left corner":"nw",
+		"the top edge":"n",
+		"the right edge":"e",
+		"the bottom edge":"s",
+		"the left edge":"w",
+		"the upward diagonal":"sw_ne",
+		"the downward diagonal":"nw_se"
+	};
+	return paper[component];
+}
+
 var nameComponents = function(data){
 	var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	var letterI = 0;
 	// translate alread-named components
 	data.filter(function(el){ return el.name != ""; })
-		.forEach(function(el){ el.name = localize.parts[el.name]; })
+		.forEach(function(el){ el.name = localize.paper[ reverseNameComponent(el.name) ]; })
 
 	data.filter(function(el){ return el.name == ""; })
 		.forEach(function(el){
@@ -88,7 +104,7 @@ function markForKey(key, marks){ return marks.filter(function(vm){return vm.key=
 
 function writeInstructionLine(line, marks, lines){
 	if(line.axiom == ""){ return ""; }
-	var instruction = localize.axiom(line.axiom);
+	var instruction = localize.axiom[line.axiom-1];
 	instruction = instruction.replace("<X>", line.name);
 	line.marks
 		.map(function(markKey){return markForKey(markKey, marks);})
@@ -100,7 +116,7 @@ function writeInstructionLine(line, marks, lines){
 }
 
 function writeInstructionMark(mark, marks, lines){
-	var instruction = localize.intersection();
+	var instruction = localize.intersection;
 	instruction = instruction.replace("<X>", mark.name);
 	mark.lines
 		.map(function(lineKey){return lineForKey(lineKey, lines);})
@@ -109,7 +125,7 @@ function writeInstructionMark(mark, marks, lines){
 }
 
 function writeFinalInstructionMark(mark, marks, lines){
-	var instruction = localize.intersectionFinal();
+	var instruction = localize.intersection_solution;
 	mark.lines
 		.map(function(lineKey){return lineForKey(lineKey, lines);})
 		.forEach(function(l,i){ instruction = instruction.replace("<L"+i+">",l.name); },this);
@@ -118,7 +134,7 @@ function writeFinalInstructionMark(mark, marks, lines){
 
 function writeFinalInstructionLine(line, marks, lines){
 	if(line.axiom == ""){ return ""; }
-	var instruction = localize.axiomFinal(line.axiom);
+	var instruction = localize.axiom_solution[line.axiom-1];
 	line.marks
 		.map(function(markKey){return markForKey(markKey, marks);})
 		.forEach(function(m,i){ instruction = instruction.replace("<P"+i+">",m.name); },this);
