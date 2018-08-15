@@ -36,6 +36,7 @@
 		"line" : "line",
 		"error" : "error",
 		"solution" : "solution",
+		"go" : "go",
 		"find a point" : "find a point",
 		"find a line" : "find a line",
 		"reference finder" : "reference finder"

@@ -36,8 +36,9 @@
 		"line" : "una línea",
 		"error" : "error",
 		"solution" : "solución",
+		"go" : "ir",
 		"find a point" : "encuentre un punto",
 		"find a line" : "encuentre una línea",
-		"reference finder" : "buscador de referencia"
+		"reference finder" : "encuentre de referencia"
 	}
 }
