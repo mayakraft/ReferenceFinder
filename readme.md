@@ -17,7 +17,14 @@ by default, 5 solutions
 
 * **count** is an optional (int) parameter to request up to 36 solutions
 
-points are queried with 
+by default, instructions are in English
+
+* **lang** is an optional string parameter, specify a language by its ISO 639-1 code. `lang=es` will print instructions in Spanish. (Only certain languages are supported, see api/languages folder for support).
+
+## Languages
+
+The directory `api/languages` contains the currently supported languages, if you do not see your language and would like to contribute a translation, fill out the [translation document](https://raw.githubusercontent.com/robbykraft/ReferenceFinder/master/translation.txt) and email it to robbykraft at gmail. (or if you're capable, create a .json, as in `api/languages`, and do a pull request. this will save me some work!)
+
 
 ## Response
 
@@ -104,10 +111,6 @@ API responds with a JSON array, an ordered list of solutions, sorted from most a
   }
 ]
 ```
-
-# Wishes
-
-Language parameter `language=en`, and if anybody would like to add your language reach out to me robbykraft [at] gmail. It's quick work, there are only 7 axioms with programmatically generated phrases like: "**make** crease F **by bringing** the bottom left corner **to** D", and then 10 named parts of the paper like **the bottom left corner** need to be translated.
 
 # License
 

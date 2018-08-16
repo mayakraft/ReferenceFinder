@@ -30,9 +30,9 @@ into:
 >>       itself, passing through the upper left corner.
 >>  
 >>  As you prepare the "parts of the paper" section below, 
->>    can you inside an axiom phrase like the example
->>    above? In English, we have to include "the" for 
->>    each part to make it sound correct.
+>>    read them out-loud inside an axiom phrase like the
+>>    example above. In English, we have to include
+>>    "the" for the whole phrase to sound correct.
 >>  
 >>  <X> only ever becomes a letter. Don't worry about <X>. 
 >>    It doesn't need to fit with "parts of a paper".
