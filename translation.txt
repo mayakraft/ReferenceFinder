@@ -1,0 +1,144 @@
+Reference Finder, translation
+-----------------------------
+
+from: English
+into:
+
+
+>>  ------------------------------
+>>  NOTES ON SENTENCE CONSTRUCTION
+>>  ------------------------------
+>>  We need to leave placeholders so the computer can
+>>    insert points and lines to build phrases.
+>>
+>>  These placeholders are surrounded by <  >
+>>  <P0> <P1> represent points, <L0> <L1> represent lines.
+>>
+>>  The computer creates phrases replacing these with:
+>>   * an item from the "parts of the paper" list
+>>       or
+>>   * a letter (A, B, C..)
+>>  
+>>  Example:
+>>   * Make crease <X> by bringing <L0> onto itself,
+>>       passing through <P0>.
+>>  
+>>  turns into (2 examples):
+>>   * Make crease D by bringing A onto itself, 
+>>       passing through B.
+>>   * Make crease D by bringing the upward diagonal onto 
+>>       itself, passing through the upper left corner.
+>>  
+>>  As you prepare the "parts of the paper" section below, 
+>>    can you inside an axiom phrase like the example
+>>    above? In English, we have to include "the" for 
+>>    each part to make it sound correct.
+>>  
+>>  <X> only ever becomes a letter. Don't worry about <X>. 
+>>    It doesn't need to fit with "parts of a paper".
+>>  
+>>  ----------
+>>  MORE NOTES
+>>  ----------
+>>  * "go" is a command "go! compute! search!".
+>>  * "find a point / line" is also a command.
+>>  * the upward diagonal = bottom left to top right.
+>>  * AXIOMS and INTERSECTIONS are sentences, capitalized,
+>>      and end in periods. PHRASES are not capitalized.
+
+
+------
+AXIOMS
+------
+1. Make crease <X> by folding through <P0> and <P1>.
+2. Make crease <X> by bringing <P0> to <P1>.
+3. Make crease <X> by bringing <L0> to <L1>.
+4. Make crease <X> by bringing <L0> onto itself, passing through <P0>.
+5. Make crease <X> by bringing <P0> to <L0>, passing through <P1>.
+6. Make crease <X> by bringing <P0> to <L0> and <P1> to <L1>.
+7. Make crease <X> by bringing <L1> onto itself and bringing <P0> to <L0>.
+
+1. The solution is made by folding through <P0> and <P1>.
+2. The solution is made by bringing <P0> to <P1>.
+3. The solution is made by bringing <L0> to <L1>.
+4. The solution is made by bringing <L0> onto itself, passing through <P0>.
+5. The solution is made by bringing <P0> to <L0>, passing through <P1>.
+6. The solution is made by bringing <P0> to <L1> and <P0> to <L1>.
+7. The solution is made by bringing <L1> onto itself and bringing <P0> to <L0>.
+
+
+1.
+2.
+3.
+4.
+5.
+6.
+7.
+
+1.
+2.
+3.
+4.
+5.
+6.
+7.
+
+
+-------------
+INTERSECTIONS
+-------------
+1. Point <X> is at the intersection of <L0> and <L1>.
+2. The solution is at the intersection of <L0> and <L1>.
+
+
+1.
+2.
+
+
+---------------------------
+PARTS OF THE PAPER, PHRASES
+---------------------------
+1. the top right corner
+2. the bottom right corner
+3. the bottom left corner
+4. the top left corner
+5. the top edge
+6. the right edge
+7. the bottom edge
+8. the left edge
+9. the upward diagonal
+10. the downward diagonal
+
+
+1.
+2.
+3.
+4.
+5.
+6.
+7.
+8.
+9.
+10.
+
+-------------
+OTHER PHRASES
+-------------
+1. point
+2. line
+3. error
+4. solution
+5. go
+6. find a point
+7. find a line
+8. reference finder
+
+
+1.
+2.
+3.
+4.
+5.
+6.
+7.
+8.
