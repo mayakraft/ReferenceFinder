@@ -2,6 +2,8 @@
 var database = require('./database.js');
 var instructions = require('./instructions.js');
 
+var validLanguageCodes = ['en','es','pt'];
+
 exports.listServices = function(req, res, next) {
 	res.json({'instructions':'specify the location of a point or a line (two collinear points)', 'example-1':'https://reference-finder.herokuapp.com/point?x=0.5&y=0.25', 'example-2':'https://reference-finder.herokuapp.com/line?x1=0.5&y1=0.25&x2=0.75&y2=0.0'});
 };
@@ -94,7 +96,7 @@ function languageFromQuery(query){
 	if(query.lang != undefined){ lang = query.lang; }
 	if(query.language != undefined){ lang = query.language; }
 	// check if language is supported
-	var valid = (['en','es'].filter(function(el){ return el == lang; }).length > 0);
+	var valid = (validLanguageCodes.filter(function(el){ return el == lang; }).length > 0);
 	if(lang == undefined || !valid){ lang = "en"; }
 	return lang;
 }
