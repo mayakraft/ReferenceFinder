@@ -1,6 +1,6 @@
 {
 	"axiom" : [
-		"Faça o vinco <X> dobrando através de <P0> e <P1>.",
+		"Faça o vinco <X> dobrando através da <P0> e <P1>.",
 		"Faça o vinco <X> trazendo <P0> para <P1>.",
 		"Faça o vinco <X> trazendo <L0> para <L1>.",
 		"Faça o vinco <X> colocando <L0> em si mesmo, passando por <P0>.",
@@ -9,7 +9,7 @@
 		"Faça o vinco <X> colocando <L1> em si mesmo e levando <P0> para <L0>."
 	],
 	"axiom_solution" : [
-		"A soluçăo é feita dobrando através de <P0> e <P1>.",
+		"A soluçăo é feita dobrando através da <P0> e <P1>.",
 		"A soluçăo é feita trazendo <P0> para <P1>.",
 		"A soluçăo é feita trazendo <L0> para <L1>.",
 		"A soluçăo é feita trazendo <L0> para si mesmo, passando por <P0>.",
@@ -17,8 +17,8 @@
 		"A soluçăo é feita trazendo <P0> para <L1> e <P0> para <L1>.",
 		"A soluçăo é feita trazendo <L1> para si mesmo e trazendo <P0> para <L0>."
 	],
-	"intersection" : "O ponto <X> está na interseçăo de <L0> e <L1>.",
-	"intersection_solution" : "A soluçăo está na interseçăo de <L0> e <L1>.",
+	"intersection" : "O ponto <X> está na interseçăo da <L0> e <L1>.",
+	"intersection_solution" : "A soluçăo está na interseçăo da <L0> e <L1>.",
 	"paper" : {
 		"ne" : "o canto superior direito",
 		"se" : "o canto inferior direito",
@@ -39,6 +39,6 @@
 		"go" : "ir",
 		"find a point" : "encontre um ponto",
 		"find a line" : "encontre uma linha",
-		"reference finder" : "localizador de referęncia"
+		"reference finder" : "localizador de referência"
 	}
 }

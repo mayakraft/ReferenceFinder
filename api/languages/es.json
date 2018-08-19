@@ -32,8 +32,8 @@
 		"nw_se" : "la diagonal que va hacia abajo"
 	},
 	"phrase" : {
-		"point" : "un punto",
-		"line" : "una línea",
+		"point" : "punto",
+		"line" : "línea",
 		"error" : "error",
 		"solution" : "solución",
 		"go" : "ir",

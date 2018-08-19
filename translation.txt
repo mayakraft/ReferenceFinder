@@ -2,37 +2,39 @@ Reference Finder, translation
 -----------------------------
 
 from: English
-into:
+into: 
+
+translator's name: 
 
 
 >>  ------------------------------
 >>  NOTES ON SENTENCE CONSTRUCTION
 >>  ------------------------------
->>  We need to leave placeholders so the computer can
->>    insert points and lines to build phrases.
+>>  The computer uses placeholders to build phrases.
 >>
 >>  These placeholders are surrounded by <  >
 >>  <P0> <P1> represent points, <L0> <L1> represent lines.
 >>
->>  The computer creates phrases replacing these with:
+>>  Phrases are built replacing placeholders with either:
 >>   * an item from the "parts of the paper" list
 >>       or
 >>   * a letter (A, B, C..)
 >>  
 >>  Example:
+>>  ----------------------------------------------------
 >>   * Make crease <X> by bringing <L0> onto itself,
 >>       passing through <P0>.
 >>  
->>  turns into (2 examples):
+>>  This can turns into (two examples):
 >>   * Make crease D by bringing A onto itself, 
 >>       passing through B.
 >>   * Make crease D by bringing the upward diagonal onto 
 >>       itself, passing through the upper left corner.
->>  
->>  As you prepare the "parts of the paper" section below, 
->>    read them out-loud inside an axiom phrase like the
->>    example above. In English, we have to include
->>    "the" for the whole phrase to sound correct.
+>>  ----------------------------------------------------
+>>  In English, we have to include "the" on each "part 
+>>   of the paper" for the whole phrase to sound correct. 
+>>   Please perform this substitution manually and read it 
+>>   aloud to check that it sounds correct too.
 >>  
 >>  <X> only ever becomes a letter. Don't worry about <X>. 
 >>    It doesn't need to fit with "parts of a paper".
@@ -40,7 +42,7 @@ into:
 >>  ----------
 >>  MORE NOTES
 >>  ----------
->>  * "go" is a command "go! compute! search!".
+>>  * "go" is a command "go! compute! search!"
 >>  * "find a point / line" is also a command.
 >>  * the upward diagonal = bottom left to top right.
 >>  * AXIOMS and INTERSECTIONS are sentences, capitalized,
