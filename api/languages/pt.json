@@ -24,12 +24,12 @@
 		"se" : "o canto inferior direito",
 		"sw" : "o canto inferior esquerdo",
 		"nw" : "o canto superior esquerdo",
-		"n" : "a aresta superior",
-		"e" : "a aresta direita",
-		"s" : "a aresta inferior",
-		"w" : "a aresta esquerda",
-		"sw_ne" : "a diagonal ascendente",
-		"nw_se" : "a diagonal descendente"
+		"n" : "aresta superior",
+		"e" : "aresta direita",
+		"s" : "aresta inferior",
+		"w" : "aresta esquerda",
+		"sw_ne" : "diagonal ascendente",
+		"nw_se" : "diagonal descendente"
 	},
 	"phrase" : {
 		"point" : "ponto",
