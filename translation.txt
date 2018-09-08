@@ -69,7 +69,7 @@ AXIOMS
 7. The solution is made by bringing <L1> onto itself and bringing <P0> to <L0>.
 
 
-1.
+1. 
 2.
 3.
 4.

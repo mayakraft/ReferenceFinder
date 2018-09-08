@@ -14,7 +14,7 @@
 		"The solution is made by bringing <L0> to <L1>.",
 		"The solution is made by bringing <L0> onto itself, passing through <P0>.",
 		"The solution is made by bringing <P0> to <L0>, passing through <P1>.",
-		"The solution is made by bringing <P0> to <L1> and <P0> to <L1>.",
+		"The solution is made by bringing <P0> to <L1> and <P1> to <L1>.",
 		"The solution is made by bringing <L1> onto itself and bringing <P0> to <L0>."
 	],
 	"intersection" : "Point <X> is at the intersection of <L0> and <L1>.",

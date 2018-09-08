@@ -2,7 +2,7 @@
 var database = require('./database.js');
 var instructions = require('./instructions.js');
 
-var validLanguageCodes = ['en','es','pt'];
+var validLanguageCodes = ['en','es','pt','ru'];
 
 exports.listServices = function(req, res, next) {
 	res.json({'instructions':'specify the location of a point or a line (two collinear points)', 'example-1':'https://reference-finder.herokuapp.com/point?x=0.5&y=0.25', 'example-2':'https://reference-finder.herokuapp.com/line?x1=0.5&y1=0.25&x2=0.75&y2=0.0'});

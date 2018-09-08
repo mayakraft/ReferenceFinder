@@ -14,7 +14,7 @@
 		"La solución se logra llevando <L0> a <L1>.",
 		"La solución se logra llevando <L0> sobre ella misma, pasando por <P0>.",
 		"La solución se logra llevando <P0> a <L0>, pasando por <P1>.",
-		"La solución se logra llevando <P0> a <L1> y <P0> a <L1>.",
+		"La solución se logra llevando <P0> a <L0> y <P1> a <L1>.",
 		"La solución se logra llevando <L1> sobre ella misma y llevando <P0> a <L0>."
 	],
 	"intersection" : "<X> es la intersección de <L0> y <L1>.",
